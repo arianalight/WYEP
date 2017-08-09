@@ -92,6 +92,7 @@ export class HomePage {
 					}
 					nowplaying.style.display = 'inherit';
 				}
+				this.backgroundMode.setDefaults({ icon: 'platforms/android/res/drawable-hdpi/icon.png',title:'Now Playing: ' + song.textContent, text: by.textContent + " " + artist.textContent});
        }, error => {
         console.log(error);// Error getting the data
     });	
