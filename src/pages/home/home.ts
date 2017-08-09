@@ -1,37 +1,103 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { Platform } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import {Http, Headers, RequestOptions} from '@angular/http';
+import 'rxjs/add/operator/map';
+import { Storage } from '@ionic/storage';
+import { BackgroundMode } from '@ionic-native/background-mode';
 declare var ExoPlayer;
-
+  
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
+	autoPlay: any;
+  constructor(public navCtrl: NavController, private iab: InAppBrowser, public plt: Platform, public http: Http, private storage: Storage, private backgroundMode: BackgroundMode) {
 
-  constructor(public navCtrl: NavController, public plt: Platform) {
-  }
-	openLiveRadio() {
-	  var params = { 
-			url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/WYEPFMAAC.aac',
-			userAgent: 'MyAwesomePlayer', // default is 'ExoPlayerPlugin'
-			aspectRatio: 'FILL_SCREEN', // default is FIT_SCREEN
-			hideTimeout: 5000, // Hide controls after this many milliseconds, default is 5 sec
-			seekTo: 0, // Start playback 10 minutes into video specified in milliseconds, default is 0
-			skipTime: 0, // Amount of time to use when going forward/backward, default is 1 min
-			controller: { // If this object is not present controller will not be visible
-					hideProgress: false,
-					controlIcons: {
-							'exo_rew': 'http://url.to/rew.png',
-							'exo_play': 'http://url.to/play.png',
-							'exo_pause': 'http://url.to/pause.png',
-							'exo_ffwd': 'http://url.to/ffwd.png'
-					}
-			}
+  storage.get('autoPlay').then((val) => {
+		this.autoPlay = val;
+		if (this.autoPlay == true){
+			this.openLiveRadio();
 		}
-		this.plt.ready().then(() => {
-			  ExoPlayer.show(params);
-    });
+  });
+	var temp = this;	
+	setInterval(function(){ temp.whatSong();} , 60000);
+		if(this.plt.is('android')){
+			this.plt.ready().then(() => {
+				temp.openLiveRadio();	
+			});
+		}
+		
+  }
+	change_autoPlay(){
+	  this.storage.set('autoPlay', this.autoPlay);
+	}
+	openLiveRadio() {
+		this.whatSong();
+		var playPause: HTMLElement = document.getElementById('playPause');
+		if (playPause.textContent === "Play"){ 
+			this.backgroundMode.enable();
+			playPause.textContent = "Stop";	
+			var params = { 
+				url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/WYEPFMAAC.aac',
+				userAgent: 'WYEPPlayer', // default is 'ExoPlayerPlugin'
+				audioOnly: true,
+			}
+		} else {
+			this.backgroundMode.disable();
+			playPause.textContent = "Play";
+			var params = { 
+				url: '',
+				userAgent: 'WYEPPlayer', // default is 'ExoPlayerPlugin'
+				audioOnly: true,
+			}
+			var nowplaying: HTMLElement = document.getElementById('nowplaying');
+			nowplaying.style.display = 'none';
+		}	
+		if(this.plt.is('android')){
+			this.plt.ready().then(() => {
+					ExoPlayer.show(params);
+					ExoPlayer.showController();
+			});
+		}
+  }
+	public whatSong() {
+		var song: HTMLElement = document.getElementById('song');
+		var by: HTMLElement = document.getElementById('by');
+		var artist: HTMLElement = document.getElementById('artist');
+		
+    this.http.get("https://api.composer.nprstations.org/v1/widget/50e451b6a93e91ee0a00028e/now?format=json")
+      .subscribe(data => {
+				
+			  var myJSON = data.json();
+				var trackname = myJSON['onNow']['song'];
+				var nowplaying: HTMLElement = document.getElementById('nowplaying');
+				if(trackname != null &&  trackname != undefined ){
+					song.textContent = myJSON['onNow']['song']['trackName'];
+					by.textContent = "by";
+					artist.textContent = myJSON['onNow']['song']['artistName'];
+					nowplaying.style.display = 'inherit';
+				} else {
+					if(myJSON['onNow']['program']['name']){
+						console.log(myJSON['onNow']['program']['name']);
+						song.textContent = myJSON['onNow']['program']['name'];
+					}
+					if(myJSON['onNow']['program']['hosts']['name']){
+						by.textContent = "with";
+						artist.textContent = myJSON['onNow']['program']['hosts']['name'];
+					} else {
+						by.textContent = "";
+						artist.textContent = "";
+					}
+					nowplaying.style.display = 'inherit';
+				}
+       }, error => {
+        console.log(error);// Error getting the data
+    });	
+	}
+	donate() { 
+			const browser = this.iab.create('https://wyep.secureallegiance.com/wyep/WebModule/Donate.aspx?P=WYEP&PAGETYPE=PLG&CHECK=Kg6UODfewF6qK20krF35cqUOstgWaB20');
   }
 
 

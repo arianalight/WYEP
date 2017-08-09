@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "208572729259",
+    "firebase_url": "https://wyep-for-ios.firebaseio.com",
+    "project_id": "wyep-for-ios",
+    "storage_bucket": "wyep-for-ios.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208572729259:android:20f216b9892e657e",
+        "android_client_info": {
+          "package_name": "org.wyep.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "208572729259-9aa9teri7jdnm0b419gqn2qgn70emmig.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.wyep.android",
+            "certificate_hash": "0ef283e1ae57aa6052dc147090fb0719a1421633"
+          }
+        },
+        {
+          "client_id": "208572729259-9fop0qouv09f4adfcc265hldib53sf1f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3p3sra7N5HGfw2oBclpvbz8IMRJBtIvc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "208572729259-be15me7o08chj636eieeg2iegtj97lrc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.wyep.ios"
+              }
+            },
+            {
+              "client_id": "208572729259-9fop0qouv09f4adfcc265hldib53sf1f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

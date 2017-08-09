@@ -3,9 +3,25 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { HttpModule  } from '@angular/http';
+import { BackgroundMode } from '@ionic-native/background-mode';
+import { AngularFireModule } from 'angularfire2';
 
+// AF2 Settings
+export const firebaseConfig = {
+		apiKey: "AIzaSyCG5l5f70JnKEBC_GsXiJex0q_Wm5XjWd4",
+    authDomain: "wyep-for-ios.firebaseapp.com",
+    databaseURL: "https://wyep-for-ios.firebaseio.com",
+    projectId: "wyep-for-ios",
+    storageBucket: "wyep-for-ios.appspot.com",
+    messagingSenderId: "208572729259"
+};
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+
+import { IonicStorageModule } from '@ionic/storage';
+
 
 @NgModule({
   declarations: [
@@ -14,7 +30,13 @@ import { HomePage } from '../pages/home/home';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+		HttpModule,
+		IonicStorageModule.forRoot({
+      name: '__mydb',
+         driverOrder: ['indexeddb', 'sqlite', 'websql']
+    }),
+    AngularFireModule.initializeApp(firebaseConfig)		
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -24,7 +46,11 @@ import { HomePage } from '../pages/home/home';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+		InAppBrowser,
+		HttpModule,
+		BackgroundMode
   ]
 })
+ 
 export class AppModule {}

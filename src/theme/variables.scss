@@ -71,7 +71,36 @@ $colors: (
 // default are overridden.
 
 @import "ionic.theme.default";
-
+.logo {
+    width:40%;
+    height:100%;
+}
+.toolbar {
+	
+}
+#wyeplogo {
+    margin: 2px;
+}
+#donate {
+    
+    margin: 2px;
+}
+#top-content {
+    background: url('../assets/img/wyeppark.jpg');
+    background-size: 100%;
+    margin-top: 20px;
+    height: 60%;
+}
+#nowplaying {
+		background-color: rgba(244, 244, 244, 0.90);
+		width: 100px;
+    min-width: 50%;
+		-webkit-border-radius: 20px;
+		border-radius: 20px;
+		margin: 20px auto;
+    padding: 20px;
+		display: none;
+}
 
 // Ionicons
 // --------------------------------------------------
