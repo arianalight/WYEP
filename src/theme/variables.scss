@@ -103,6 +103,17 @@ $colors: (
     padding: 20px;
 		display: none;
 }
+#song, #artist {
+	margin-top: -10px;
+}
+#by {
+	margin-top: 0px;
+}
+#trackname {
+	margin-bottom:-6px;
+	padding-bottom:0px;
+}
+
 #played {
 		font-size: 2.2rem;
 }

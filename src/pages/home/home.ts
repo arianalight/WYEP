@@ -5,8 +5,8 @@ import {Http, Headers, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { HeaderColor } from '@ionic-native/header-color';
 declare var ExoPlayer;
-declare var headerColor;
   
 @Component({
   selector: 'page-home',
@@ -15,7 +15,7 @@ declare var headerColor;
 export class HomePage {
 	autoPlay: any;
 	results: any;
-  constructor(public navCtrl: NavController, private iab: InAppBrowser, public plt: Platform, public http: Http, private storage: Storage, private backgroundMode: BackgroundMode) {
+  constructor(public navCtrl: NavController, private iab: InAppBrowser, public plt: Platform, public http: Http, private storage: Storage, private backgroundMode: BackgroundMode, private headerColor:HeaderColor) {
 
   storage.get('autoPlay').then((val) => {
 		this.autoPlay = val;
@@ -27,8 +27,8 @@ export class HomePage {
 	setInterval(function(){ temp.whatSong();} , 60000);
 		if(this.plt.is('android')){
 			this.plt.ready().then(() => {
-				temp.openLiveRadio();		
-				//window.plugins.headerColor.tint("#ffffff");				
+				temp.openLiveRadio();					
+				this.headerColor.tint("#ffffff");				
 			});
 		}
 		
@@ -82,9 +82,9 @@ export class HomePage {
       .subscribe(data => {
 			  var myJSON = data.json();
 				this.results = myJSON['tracklist']['results'];
-				console.log("results is: " + this.results[0].song.trackName);
+				//console.log("results is: " + this.results[0].song.trackName);
        }, error => {
-        console.log(error);// Error getting the data
+        //console.log(error);// Error getting the data
     });	
 	
 	
@@ -107,7 +107,7 @@ export class HomePage {
 					nowplaying.style.display = 'inherit';
 				} else {
 					if(myJSON['onNow']['program']['name']){
-						console.log(myJSON['onNow']['program']['name']);
+						//console.log(myJSON['onNow']['program']['name']);
 						song.textContent = myJSON['onNow']['program']['name'];
 					}
 					if(myJSON['onNow']['program']['hosts']['name']){
@@ -121,7 +121,7 @@ export class HomePage {
 				}
 				this.backgroundMode.setDefaults({ color: 'fc0a07', icon: 'resources/android/icon/drawable-xxxhdpi-icon.png',title:'Now Playing: ' + song.textContent, text: by.textContent + " " + artist.textContent});
        }, error => {
-        console.log(error);// Error getting the data
+        //console.log(error);// Error getting the data
     });	
 	}  
 	donate() { 

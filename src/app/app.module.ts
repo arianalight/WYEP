@@ -7,6 +7,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { HttpModule  } from '@angular/http';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { AngularFireModule } from 'angularfire2';
+import { HeaderColor } from '@ionic-native/header-color';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -49,7 +50,8 @@ import { IonicStorageModule } from '@ionic/storage';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
 		InAppBrowser,
 		HttpModule,
-		BackgroundMode
+		BackgroundMode,
+		HeaderColor
   ]
 })
  

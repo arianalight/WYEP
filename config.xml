@@ -3,7 +3,7 @@
     <name>WYEP</name>
     <description>Play the WYEP live stream in high quality, see the playlist, and more!</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">WYEP Digital Team</author>
-    <content original-src="index.html" src="http://192.168.56.1:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
     <allow-navigation href="http://192.168.200.123:8100" />
@@ -87,6 +87,7 @@
     </platform>
     <allow-navigation href="http://10.67.1.40:8100" />
     <allow-navigation href="http://10.87.10.6:8100" />
+    <allow-navigation href="http://192.168.0.59:8100" />
     <engine name="android" spec="^6.2.3" />
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
     <plugin name="cordova-plugin-console" spec="^1.0.5" />
