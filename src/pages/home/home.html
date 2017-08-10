@@ -10,11 +10,21 @@
 </ion-header>
 
 <ion-content text-center id="top-content" padding>
-	<div float-right><div>Auto Play?</div><ion-toggle float-left [(ngModel)]="autoPlay" (ionChange)="change_autoPlay();"></ion-toggle></div><button float-left ion-button (click)="openLiveRadio()" id="playPause"> Play </button>
+	<div float-right><div id="auto-play">Auto Play?</div><ion-toggle float-left [(ngModel)]="autoPlay" (ionChange)="change_autoPlay();"></ion-toggle></div><button float-left ion-button (click)="openLiveRadio()" id="playPause"> Play </button>
 	<div id="nowplaying" >
 		<h3>Now Playing</h3>
 		<div id='song'>{{song}}</div>
-		<h3 id="by">by</h3>
+		<h3 id="by">by </h3>
 		<div id='artist'>{{artist}}</div>
 	</div>
+	<ion-list id="previously" no-padding>
+		<ion-item-divider id="played" color="dark">
+			Previously Played
+		</ion-item-divider>
+		<ion-item *ngFor="let result of results"  type="item-text-wrap" >
+			<h2>{{result.song.trackName}}  </h2>
+			<div float-left>{{result.song.artistName}}</div><div float-right>{{convert12hr(result.song._start)}}</div>
+		</ion-item>
+	</ion-list>
 </ion-content>
+

@@ -3,7 +3,7 @@
     <name>WYEP</name>
     <description>Play the WYEP live stream in high quality, see the playlist, and more!</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">WYEP Digital Team</author>
-    <content original-src="index.html" src="http://10.67.1.40:8100" />
+    <content original-src="index.html" src="http://192.168.56.1:8100" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
     <allow-navigation href="http://192.168.200.123:8100" />
@@ -34,7 +34,7 @@
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
-        <icon density="hdpi" src="resources/android/icon/icon.png" />
+        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
         <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
         <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
         <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
@@ -94,6 +94,7 @@
     <plugin name="cordova-plugin-dialogs" spec="~1.3.3" />
     <plugin name="cordova-plugin-exoplayer" spec="^2.5.0" />
     <plugin name="cordova-plugin-firebase" spec="0.1.21" />
+    <plugin name="cordova-plugin-headercolor" spec="^1.0.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="^1.7.1" />
     <plugin name="cordova-plugin-secure-storage" spec="^2.6.8" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />

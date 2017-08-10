@@ -85,23 +85,31 @@ $colors: (
     
     margin: 2px;
 }
+#auto-play{
+	color:#fff;
+}
 #top-content {
     background: url('../assets/img/wyeppark.jpg');
     background-size: 100%;
-    margin-top: 20px;
-    height: 60%;
+    height: 100%;
 }
 #nowplaying {
 		background-color: rgba(244, 244, 244, 0.90);
 		width: 100px;
-    min-width: 50%;
+    min-width: 70%;
 		-webkit-border-radius: 20px;
 		border-radius: 20px;
-		margin: 20px auto;
+		margin: 70px auto 0px;
     padding: 20px;
 		display: none;
 }
-
+#played {
+		font-size: 2.2rem;
+}
+#previously {
+		margin:0;
+		margin-top:20px;
+}
 // Ionicons
 // --------------------------------------------------
 // The premium icon font for Ionic. For more info, please see:
