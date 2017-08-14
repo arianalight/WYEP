@@ -72,6 +72,7 @@ export class HomePage {
 		}	
 		if(this.plt.is('android')){
 			this.plt.ready().then(() => {
+					ExoPlayer.close();
 					ExoPlayer.show(params);
 					ExoPlayer.showController();
 			});
