@@ -50,7 +50,8 @@ export class HomePage {
 	openLiveRadio() {
 		this.whatSong();
 		var playPause: HTMLElement = document.getElementById('playPause');
-		if (playPause.textContent === "Play"){ 
+		if (playPause.textContent === "Play"){
+			this.backgroundMode.disable();
 			this.backgroundMode.enable();
 			playPause.textContent = "Stop";	
 			var params = { 
