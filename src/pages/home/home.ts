@@ -100,12 +100,13 @@ export class HomePage {
     this.http.get("https://api.composer.nprstations.org/v1/widget/50e451b6a93e91ee0a00028e/now?format=json")
       .subscribe(data => {
 			  var myJSON = data.json();
-				var trackname = myJSON['onNow']['song'];
+				var trackname = myJSON['onNow']['song'].trackName;
+				var artistname = myJSON['onNow']['song'].artistName;
 				var nowplaying: HTMLElement = document.getElementById('nowplaying');
-				if(trackname != null &&  trackname != undefined ){
-					song.textContent = myJSON['onNow']['song']['trackName'];
+				if(trackname != null && trackname != undefined && artistname != null && artistname != undefined ){
+					song.textContent = trackname;
 					by.textContent = "by";
-					artist.textContent = myJSON['onNow']['song']['artistName'];
+					artist.textContent = artistname;
 					nowplaying.style.display = 'inherit';
 				} else {
 					if(myJSON['onNow']['program']['name']){
