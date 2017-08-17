@@ -1,26 +1,68 @@
-This is a starter template for [Ionic](http://ionicframework.com/docs/) projects.
+### Ionic 2 & Exoplayer for Android ###
 
-## How to use this template
+There is a Cordova plugin for Google’s ExoPlayer media framework:
+https://github.com/frontyard/cordova-plugin-exoplayer
 
-*This template does not work on its own*. The shared files for each starter are found in the [ionic2-app-base repo](https://github.com/ionic-team/ionic2-app-base).
+Generally, you can follow the instructions in the readme file for the plugin.  But you will need to do a couple of additional things in Ionic 2 and up (because, TypeScript 2):
 
-To use this template, either create a new ionic project using the ionic node.js utility, or copy the files from this repository into the [Starter App Base](https://github.com/ionic-team/ionic2-app-base).
+I started with the blank template, following these instructions: https://ionicframework.com/docs/intro/tutorial/
 
-### With the Ionic CLI:
-
-Take the name after `ionic2-starter-`, and that is the name of the template to be used when using the `ionic start` command below:
-
-```bash
-$ sudo npm install -g ionic cordova
-$ ionic start myBlank blank
+From your app directory on the command line:
+```shell
+ionic start MyIonicProject blank
+```
+From your app directory (command line), add cordova-plugin-exoplayer :
+```shell
+cordova plugin add cordova-plugin-exoplayer
+```
+Add the Android platform:
+```shell
+ionic cordova platform add android
 ```
 
-Then, to run it, cd into `myBlank` and run:
+For testing purposes, I added a button on the first tutorial page: (src/pages/tutorial/tutorial.html)
 
-```bash
-$ ionic cordova platform add ios
-$ ionic cordova run ios
+```html 
+<button (click)="openLiveRadio()">Play</button>
 ```
 
-Substitute ios for android if not on a Mac.
+Then in tutorial.ts (same dir) I import Platform and add this declaration near the imports at the top of the code:
+```javascript
+import { Platform } from 'ionic-angular';
+declare var ExoPlayer;
+```
+
+Also be sure to add Platform to the constructor:
+```javascript
+constructor(public navCtrl: NavController, public plt: Platform) {
+  }
+```
+
+
+And here is the function in the HomePage class:
+```javascript
+	openLiveRadio() {
+	  var params = { 
+			url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/WYEPFMAAC.aac',
+			userAgent: 'MyAwesomePlayer', // default is 'ExoPlayerPlugin'
+			aspectRatio: 'FILL_SCREEN', // default is FIT_SCREEN
+			hideTimeout: 5000, // Hide controls after this many milliseconds, default is 5 sec
+			seekTo: 0, // Start playback 10 minutes into video specified in milliseconds, default is 0
+			skipTime: 0, // Amount of time to use when going forward/backward, default is 1 min
+			controller: { // If this object is not present controller will not be visible
+					hideProgress: false,
+					controlIcons: {
+							'exo_rew': 'http://url.to/rew.png',
+							'exo_play': 'http://url.to/play.png',
+							'exo_pause': 'http://url.to/pause.png',
+							'exo_ffwd': 'http://url.to/ffwd.png'
+					}
+			}
+		}
+		this.plt.ready().then(() => {
+			  ExoPlayer.show(params);
+    });
+  }
+```
+
 
