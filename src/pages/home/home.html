@@ -1,11 +1,13 @@
 <ion-header>
   <ion-navbar>
-    <div float-left class="left logo"><img id="wyeplogo" src="./assets/img/WYEP_H_RGB.png" /></div>
-            <div float-right class="right">
-              <button ion-button (click)="donate()" id="donate">
-                DONATE
-              </button>
-            </div>
+    <a href="http://wyep.org"><div float-left class="left logo"><img id="wyeplogo" src="./assets/img/WYEP_H_RGB.png" />
+    </div>
+    </a>    
+    <div float-right class="right">
+      <button ion-button (click)="donate()" id="donate">
+        DONATE
+      </button>
+    </div>
   </ion-navbar>
 </ion-header>
 
@@ -23,11 +25,17 @@
 		</ion-item-divider>
 		<ion-item>
 			<ion-row *ngFor="let result of results"  type="item-text-wrap">
-					<ion-col col-12 id="trackname"><b>{{result.song.trackName}}</b></ion-col>
-					<ion-col col-8>{{result.song.artistName}}</ion-col>
+					<ion-col col-12 id="trackname" text-wrap><b>{{result.song.trackName}}</b></ion-col>
+					<ion-col col-8 text-wrap>{{result.song.artistName}}</ion-col>
 					<ion-col col-4 text-right>{{convert12hr(result.song._start)}}</ion-col>
 			</ion-row>
+            <ion-row>
+                <ion-col col-12>    
+                    <a href="http://www.wyep.org/on-air">
+                        <div text-center>view more on website</div>
+                    </a>
+                </ion-col>    
+            </ion-row>
 		</ion-item>
 	</ion-list>
 </ion-content>
-
