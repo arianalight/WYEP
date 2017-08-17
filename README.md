@@ -1,4 +1,7 @@
+
 ### Ionic 2 & Exoplayer for Android ###
+
+This is an Android app made with Ionic v2 / cordova using Google's ExoPlayer to stream the WYEP FM live stream.
 
 There is a Cordova plugin for Google’s ExoPlayer media framework:
 https://github.com/frontyard/cordova-plugin-exoplayer
