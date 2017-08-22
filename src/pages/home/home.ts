@@ -235,35 +235,7 @@ export class HomePage {
 	
 	public whatSong() {
 		this.fetchSongData();
-		this.lastFiveSongs();
-		/*
-		var song: HTMLElement = document.getElementById('song');
-		var by: HTMLElement = document.getElementById('by');
-		var artist: HTMLElement = document.getElementById('artist');
-
-			  var myJSON = data.json();
-				var trackname = myJSON['onNow']['song'].trackName;
-				var artistname = myJSON['onNow']['song'].artistName;
-				if(trackname != null && trackname != undefined && artistname != null && artistname != undefined ){
-					song.textContent = trackname;
-					by.textContent = "by";
-					artist.textContent = artistname;
-				} else {
-					if(myJSON['onNow']['program']['name']){
-						////console.log(myJSON['onNow']['program']['name']);
-						song.textContent = myJSON['onNow']['program']['name'];
-					}
-					if(myJSON['onNow']['program']['hosts']['name']){
-						by.textContent = "with";
-						artist.textContent = myJSON['onNow']['program']['hosts']['name'];
-					} else {
-						by.textContent = "";
-						artist.textContent = "";
-					}
-				}
-				
-				this.backgroundMode.setDefaults({ color: 'fc0a07', icon: 'resources/android/icon/drawable-xxxhdpi-icon.png',title:'Now Playing: ' + song.textContent, text: by.textContent + " " + artist.textContent});*/
-       
+		this.lastFiveSongs();     
 	}  
 	donate() { 
 			const browser = this.iab.create('https://wyep.secureallegiance.com/wyep/WebModule/Donate.aspx?P=WYEP&PAGETYPE=PLG&CHECK=Kg6UODfewF6qK20krF35cqUOstgWaB20');
