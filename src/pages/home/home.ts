@@ -46,7 +46,8 @@ export class HomePage {
 		this.headerColor.tint("#ffffff");
 		var nowplaying: HTMLElement = document.getElementById('nowplaying');
 		nowplaying.style.display = 'inherit';
-		this.checkLater(100, "init");	
+		this.checkLater(100, "init");
+		this.lastFiveSongs();
 	}
 	change_autoPlay(){
 	  this.storage.set('autoPlay', this.autoPlay);
@@ -194,8 +195,9 @@ export class HomePage {
 					}
 					this.priorEndtime = endtime;					 
 					
-					//print it
+					//print it 
 					this.printSong(trackname,"by", artistname);
+					this.lastFiveSongs();
 										
 					//try again after the song duration
 					//console.log("duration: " + duration);
@@ -235,7 +237,6 @@ export class HomePage {
 	
 	public whatSong() {
 		this.fetchSongData();
-		this.lastFiveSongs();
 		/*
 		var song: HTMLElement = document.getElementById('song');
 		var by: HTMLElement = document.getElementById('by');

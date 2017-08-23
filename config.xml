@@ -3,7 +3,7 @@
     <name>WYEP</name>
     <description>Play the WYEP live stream in high quality, see the playlist, and more!</description>
     <author email="antonio@wyep.org" href="http://wyep.org">WYEP Digital Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://10.67.1.44:8100" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
     <allow-navigation href="http://192.168.200.123:8100" />
