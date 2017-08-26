@@ -20,7 +20,7 @@ export class HomePage {
 	priorEndtime: any;
 	timeout: any;
 	interval: any;
-  constructor(public navCtrl: NavController, private iab: InAppBrowser, public plt: Platform, public http: Http, private storage: Storage, private backgroundMode: BackgroundMode, private headerColor:HeaderColor, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, private iab: InAppBrowser, public plt: Platform, public http: Http, private storage: Storage, public backgroundMode: BackgroundMode, private headerColor:HeaderColor, public alertCtrl: AlertController) {
 
 		storage.get('autoPlay').then((val) => {
 			this.autoPlay = val;
@@ -35,11 +35,16 @@ export class HomePage {
 				this.initAndroid();						
 			});
 		}
+		this.plt.resume.subscribe(() => {
+			this.resetDisplay();
+		});
 		
   }
 	initAndroid(){
+	//	this.backgroundMode.on('activate', function(){
+	//		console.log("background enabled!!");
+	//	});
 		this.printSong("...loading data","", "");
-		this.backgroundMode.disable();
 		//close 
 		ExoPlayer.close();
 		this.openLiveRadio();					
@@ -62,11 +67,18 @@ export class HomePage {
 		if (h > 12) h = h - 12;
 		return h + ":"+ m + ' ' + ampm;
 		}
-	}  
+	}
+	resetDisplay() {
+		this.results = new Array();
+		this.lastFiveSongs();
+		this.checkLater(300, "first");
+	}
 	openLiveRadio() {
 		var playPause: HTMLElement = document.getElementById('playPause');
 		if (playPause.textContent === "Play"){
+			this.resetDisplay();
 			this.backgroundMode.enable();
+			this.backgroundMode.overrideBackButton();
 			playPause.textContent = "Stop";	
 			var params = { 
 				url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/WYEPFMAAC.aac',
@@ -85,7 +97,6 @@ export class HomePage {
 		}	
 		if(this.plt.is('android')){
 			this.plt.ready().then(() => {
-					ExoPlayer.close();
 					ExoPlayer.show(params);
 					ExoPlayer.showController();
 			});
@@ -93,13 +104,30 @@ export class HomePage {
   }
 	public lastFiveSongs(){
 	// 
-	this.http.get("https://api.composer.nprstations.org/v1/widget/50e451b6a93e91ee0a00028e/tracks?format=json&limit=5&hide_amazon=false&hide_itunes=false&hide_arkiv=false&share_format=false")
+	this.http.get("https://api.composer.nprstations.org/v1/widget/50e451b6a93e91ee0a00028e/tracks?format=json&limit=10&hide_amazon=false&hide_itunes=false&hide_arkiv=false&share_format=false")
       .subscribe(data => {
 			  var myJSON = data.json();
-				this.results = myJSON['tracklist']['results'];
-				////console.log("results is: " + this.results[0].song.trackName);
+				//console.log("results length : " + myJSON['tracklist']['results'].length);
+				var one = myJSON['tracklist']['results'][0].song.trackName;
+				var two = myJSON['tracklist']['results'][1].song.trackName;
+				var three = myJSON['tracklist']['results'][2].song.trackName;
+				// is item one the currently playing song?
+				var song: HTMLElement = document.getElementById('song');
+				if(one === song.textContent){
+					//console.log("remove first item, it's Now Playing: " + song.textContent)
+					myJSON['tracklist']['results'].shift();
+				}
+				if(this.results && this.results.length > 1){
+					var one = this.results[0].song.trackName;
+					if(one == two || one == three){
+						this.results = myJSON['tracklist']['results'];
+					} else {
+						this.checkLater(5000, "one doesn't equal two");
+					} 
+				} else {
+					this.results = myJSON['tracklist']['results'];
+				}
        }, error => {
-        ////console.log(error);// Error getting the data
     });	
 	}
 	public fetchSongData(){
@@ -117,17 +145,11 @@ export class HomePage {
 		if(source == "first"){
 			this.interval = setInterval(() => { // <=== 
 			this.whatSong();
-			//console.log("checkLater interval");
-			//console.log(later);
-			//console.log(source); 
 		}, later);
 		} else {
 			this.timeout = setTimeout(() => { // <=== 
 				this.whatSong();
-				//console.log("checkLater timeout");
 			}, later);
-			//console.log(later);
-			//console.log(source);
 		}	
 	}
 	public transTime(time){
@@ -150,7 +172,7 @@ export class HomePage {
 		var yyyy = today.getFullYear();
 		var h = today.getHours();
 		var m = today.getMinutes();  // remove a bit to compensate for 
-		var s = today.getSeconds()- 50;  // network delay, buffer etc
+		var s = today.getSeconds()- 55;  // network delay, buffer etc
 		var ms = today.getMilliseconds();
 		
 		if(mm<10) {
@@ -168,28 +190,32 @@ export class HomePage {
 		return now;
 	}
 	public validateSong(json){
-	//console.log("validate");
 		if(json['onNow']['song'] != undefined){		
 			var trackname = json['onNow']['song'].trackName;
 			var artistname = json['onNow']['song'].artistName;
 			var starttime = this.transTime(json['onNow']['song']._start_time);
-			var endtime = this.transTime(json['onNow']['song']._end_time);		
 			var duration = json['onNow']['song']._duration;
-			var now = this.nowToNumber();
+			if(json['onNow']['song']._end_time){
+				var endtime = this.transTime(json['onNow']['song']._end_time);
+			} 
+					
+// add to spotify playlist like my shazam tracks?
 
 			//is it really there?
-			if(trackname != null && trackname != undefined && artistname != null && artistname != undefined ){
-			//console.log("trackname: " + trackname);
-			//console.log("priorEndtime: " + this.priorEndtime);
-			//console.log("now: " + now);
-			//console.log("starttime: " + starttime);
-			//console.log("endtime: " + endtime);
-			//console.log("duration: " + duration);
-			//console.log("timeout: " + this.timeout);
+			if(trackname != null && trackname != undefined  && trackname != "." && artistname != null && artistname != undefined   && artistname != "." && starttime != null && starttime != undefined){
+
 				//is it new but not in the future?
+
+				var now = this.nowToNumber();
+				if(!endtime || endtime === undefined || endtime === null){
+					var endtime = starttime + duration;
+					//console.log("no endtime: " + endtime);
+					//console.log("starttime " + starttime);
+					//console.log("duration " + duration);
+					//console.log("endtime " + endtime);
+				}
 				if(this.priorEndtime < endtime && now > starttime){
 					if(this.priorEndtime == 3){
-					  //console.log("first!");
 						this.checkLater(5000, "first");
 						this.firstruntime = endtime;
 					}
@@ -200,7 +226,6 @@ export class HomePage {
 					this.lastFiveSongs();
 										
 					//try again after the song duration
-					//console.log("duration: " + duration);
 					if(this.firstruntime != endtime){
 						this.checkLater(duration, "new song!");
 					}
@@ -208,16 +233,17 @@ export class HomePage {
 					this.checkLater(2000, "not new");
 				} 				
 			} else {
+				//console.log(JSON.stringify(json['onNow']['program']));
 			
 				if(json['onNow']['program']['name']){
 					var programName = json['onNow']['program']['name'];
 					var hostName = json['onNow']['program']['hosts'][0].name;
 					this.printSong(programName,"with", hostName);
 				}
-				this.checkLater(2000, "no trackName");
+				this.checkLater(2000, "incomplete data");
 			}
 		} else {
-				this.checkLater(2000, "no json song");
+			this.checkLater(1000, "no json song");
 		}
 	}
 	public printSong(trackname,byWith, artistname){
@@ -237,34 +263,6 @@ export class HomePage {
 	
 	public whatSong() {
 		this.fetchSongData();
-		/*
-		var song: HTMLElement = document.getElementById('song');
-		var by: HTMLElement = document.getElementById('by');
-		var artist: HTMLElement = document.getElementById('artist');
-
-			  var myJSON = data.json();
-				var trackname = myJSON['onNow']['song'].trackName;
-				var artistname = myJSON['onNow']['song'].artistName;
-				if(trackname != null && trackname != undefined && artistname != null && artistname != undefined ){
-					song.textContent = trackname;
-					by.textContent = "by";
-					artist.textContent = artistname;
-				} else {
-					if(myJSON['onNow']['program']['name']){
-						////console.log(myJSON['onNow']['program']['name']);
-						song.textContent = myJSON['onNow']['program']['name'];
-					}
-					if(myJSON['onNow']['program']['hosts']['name']){
-						by.textContent = "with";
-						artist.textContent = myJSON['onNow']['program']['hosts']['name'];
-					} else {
-						by.textContent = "";
-						artist.textContent = "";
-					}
-				}
-				
-				this.backgroundMode.setDefaults({ color: 'fc0a07', icon: 'resources/android/icon/drawable-xxxhdpi-icon.png',title:'Now Playing: ' + song.textContent, text: by.textContent + " " + artist.textContent});*/
-       
 	}  
 	donate() { 
 			const browser = this.iab.create('https://wyep.secureallegiance.com/wyep/WebModule/Donate.aspx?P=WYEP&PAGETYPE=PLG&CHECK=Kg6UODfewF6qK20krF35cqUOstgWaB20');
@@ -283,18 +281,15 @@ export class HomePage {
         {
           text: 'Cancel',
           handler: data => {
-            //console.log('Cancel clicked');
           }
         },
         {
           text: 'Send',
           handler: data => {
-            //console.log('Sent!');
           }
         }
       ]
     });
     prompt.present();
   }
-
 }
