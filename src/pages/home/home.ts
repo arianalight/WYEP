@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { HeaderColor } from '@ionic-native/header-color';
 import { AlertController } from 'ionic-angular';
+
 declare var ExoPlayer;
   
 @Component({
@@ -20,6 +21,9 @@ export class HomePage {
 	priorEndtime: any;
 	timeout: any;
 	interval: any;
+	spotifyToken: any;
+	spotifyButton: any;
+	itunesButton: any;
   constructor(public navCtrl: NavController, private iab: InAppBrowser, public plt: Platform, public http: Http, private storage: Storage, public backgroundMode: BackgroundMode, private headerColor:HeaderColor, public alertCtrl: AlertController) {
 
 		storage.get('autoPlay').then((val) => {
@@ -32,7 +36,9 @@ export class HomePage {
 		
 		if(this.plt.is('android')){
 			this.plt.ready().then(() => {
-				this.initAndroid();						
+			this.timeout = setTimeout(() => { // <=== 
+							this.initAndroid();
+						}, 800);						
 			});
 		}
 		this.plt.resume.subscribe(() => {
@@ -41,9 +47,7 @@ export class HomePage {
 		
   }
 	initAndroid(){
-	//	this.backgroundMode.on('activate', function(){
-	//		console.log("background enabled!!");
-	//	});
+		this.authSpotify();
 		this.printSong("...loading data","", "");
 		//close 
 		ExoPlayer.close();
@@ -51,7 +55,7 @@ export class HomePage {
 		this.headerColor.tint("#ffffff");
 		var nowplaying: HTMLElement = document.getElementById('nowplaying');
 		nowplaying.style.display = 'inherit';
-		this.checkLater(100, "init");
+		this.checkLater(300, "init");
 		this.lastFiveSongs();
 	}
 	change_autoPlay(){
@@ -59,7 +63,8 @@ export class HomePage {
 	}
 	convert12hr(isoDateStr) {
 		if(isoDateStr){
-		var sp =  isoDateStr.split(":");
+		var hrminsec =  isoDateStr.split(" ")[1];
+		var sp =  hrminsec.split(":");
 		var h = sp[0];
 		var ampm = h > 11 ? 'PM' : 'AM';
 		var m = sp[1];
@@ -104,7 +109,7 @@ export class HomePage {
   }
 	public lastFiveSongs(){
 	// 
-	this.http.get("https://api.composer.nprstations.org/v1/widget/50e451b6a93e91ee0a00028e/tracks?format=json&limit=10&hide_amazon=false&hide_itunes=false&hide_arkiv=false&share_format=false")
+	this.http.get("https://api.composer.nprstations.org/v1/widget/50e451b6a93e91ee0a00028e/tracks?format=json&limit=50&hide_amazon=false&hide_itunes=false&hide_arkiv=false&share_format=false")
       .subscribe(data => {
 			  var myJSON = data.json();
 				//console.log("results length : " + myJSON['tracklist']['results'].length);
@@ -127,9 +132,139 @@ export class HomePage {
 				} else {
 					this.results = myJSON['tracklist']['results'];
 				}
+				this.getThumbs();
        }, error => {
     });	
 	}
+	public getThumbs(){
+		for(var x=0; x < this.results.length; x++){
+			if(!this.results[x].song.thumb){
+				if(this.results[x].song.catalogNumber){
+					//go get spotify thumb
+					var id = this.results[x].song.catalogNumber.split(":")[2];
+					//this.getSpotify(id);
+					this.getSpotify(id, x);
+				}	else if(this.results[x].song.artworkUrl100){
+					//use iTunes art
+					this.results[x].song.thumb = this.results[x].song.artworkUrl100;
+					this.results[x].song.bigthumb = "http://wyep.org/files/disc-32390_960_720.png";
+				} else {
+					//use placeholder graphic
+					this.results[x].song.thumb = "http://wyep.org/files/disc-32390_960_720.png";
+					this.results[x].song.bigthumb = "http://wyep.org/files/disc-32390_960_720.png";
+				}
+				//console.log("thumb is : " + this.results[x].song.thumb);
+			}
+		}
+	}
+	public authSpotify(){
+	//console.log("authSpotify");
+		let url = 'https://accounts.spotify.com/api/token';
+
+    let body = this.jsonToURLEncoded({ grant_type: 'client_credentials' });
+		//let body = new FormData({"grant_type='client_credentials'"});
+		//body.append("grant_type", "client_credentials");
+		let headers = new Headers();
+		headers.append('Content-Type', 'application/x-www-form-urlencoded');
+		headers.append('Authorization', 'Basic ZjUwNGFlY2M5MWM4NDBkNjg0ZmQzNTUxNWFkMTYyZDk6MTlmZDlmMjU5NmQzNDU4MGJjOTU2ZmRlOGNlYTQ2MjY=');
+
+	//	let options = new RequestOptions({ headers: headers });
+
+		this.http
+    .post(url, body, { headers: headers })
+    .map(response => response.json())
+    .subscribe(data => {
+        this.spotifyToken = data;
+    }, e => {
+         this.spotifyToken = e;
+    });
+
+
+/*
+						this.spotifyToken = this.http.post(url, body, options)
+													.map(res =>  res.json().data)
+														.catch( return "error ");
+		*/
+
+	}
+	private jsonToURLEncoded(jsonString){
+    return Object.keys(jsonString).map(function(key){
+      return encodeURIComponent(key) + '=' + encodeURIComponent(jsonString[key]);
+    }).join('&');
+  }
+	public objToString (obj) {
+			var str = '';
+			for (var p in obj) {
+					if (obj.hasOwnProperty(p)) {
+							str += p + '::' + obj[p] + '\n';
+					}
+			}
+			return str;
+	}
+	public getSpotify(id, x){
+		let headers = new Headers();
+    headers.append('Accept', 'application/json');
+    headers.append('Authorization', 'Bearer ' + this.spotifyToken.access_token);
+    let options = new RequestOptions({ headers: headers });
+		this.http.get("https://api.spotify.com/v1/tracks/" + id, options)
+      .subscribe(data => {
+			  var myJSON = data.json();
+				//console.log("image : " + myJSON.album.images[2].url); 
+				this.results[x].song.thumb = myJSON.album.images[2].url;
+				this.results[x].song.bigthumb = myJSON.album.images[1].url;
+       }, error => {
+			 //console.log("error looking up id : " + id);
+			 this.results[x].song.thumb = "http://wyep.org/files/disc-32390_960_720.png";
+    });	
+	
+	}
+  public stopSong(){
+		var playPause: HTMLElement = document.getElementById('playPause');
+		playPause.textContent = "Stop";
+		this.openLiveRadio();
+  }
+	public songDetailOverlay(result) {
+		if( result.song.buy.itunes || result.song.catalogNumber ){
+		if(result.song.catalogNumber){
+			//set spotify button
+			this.spotifyButton = {
+					text: 'Spotify',
+          handler: () => {
+						this.stopSong();
+						this.iab.create(result.song.catalogNumber, '_system');
+					},
+					cssClass: 'alertSpotify'
+        }
+		} else {
+			this.spotifyButton = { text: '' };
+		}
+		if(result.song.buy.itunes){
+			//set itunes button
+			this.itunesButton = {
+					text: 'iTunes',
+          handler: () => {
+						this.iab.create(result.song.buy.itunes, '_system');
+					},
+					cssClass: 'alertiTunes'
+        }
+		} else {
+			this.itunesButton = { text: '' };
+		}
+    let prompt = this.alertCtrl.create({
+      title: result.song.trackName,
+      message: "<img src='" + result.song.bigthumb +"'>",
+      buttons: [
+				this.spotifyButton,
+				this.itunesButton
+      ]
+    });
+    prompt.present();
+		}
+//  getElementsByClassName 
+//		let spotifyDiv = document.getElementsByClassName('alertSpotify');
+//		let iTunesDiv = document.getElementsByClassName('alertiTunes');
+
+  }
 	public fetchSongData(){
 		this.http.get("https://api.composer.nprstations.org/v1/widget/50e451b6a93e91ee0a00028e/now?format=json")
 				.subscribe(data => {
@@ -232,9 +367,7 @@ export class HomePage {
 				} else {
 					this.checkLater(2000, "not new");
 				} 				
-			} else {
-				//console.log(JSON.stringify(json['onNow']['program']));
-			
+			} else {			
 				if(json['onNow']['program']['name']){
 					var programName = json['onNow']['program']['name'];
 					var hostName = json['onNow']['program']['hosts'][0].name;
@@ -242,7 +375,7 @@ export class HomePage {
 				}
 				this.checkLater(2000, "incomplete data");
 			}
-		} else {
+		} else {	
 			this.checkLater(1000, "no json song");
 		}
 	}
@@ -265,12 +398,13 @@ export class HomePage {
 		this.fetchSongData();
 	}  
 	donate() { 
-			const browser = this.iab.create('https://wyep.secureallegiance.com/wyep/WebModule/Donate.aspx?P=WYEP&PAGETYPE=PLG&CHECK=Kg6UODfewF6qK20krF35cqUOstgWaB20');
+			this.iab.create('https://wyep.secureallegiance.com/wyep/WebModule/Donate.aspx?P=WYEP&PAGETYPE=PLG&CHECK=Kg6UODfewF6qK20krF35cqUOstgWaB20');
   }
 	showPrompt() {
+		
     let prompt = this.alertCtrl.create({
       title: 'Support',
-      message: "Have a question, comment, or suggestion?  We would love to hear from you!",
+      message: "Have a question, comment, or suggestion?  We would love to hear from you!  " + this.spotifyToken.access_token,
       inputs: [
         {
           name: 'email',

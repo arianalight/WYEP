@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.wyep.android" version="1.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="org.wyep.android" version="1.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>WYEP</name>
     <description>Play the WYEP live stream in high quality, see the playlist, and more!</description>
     <author email="antonio@wyep.org" href="http://wyep.org">WYEP Digital Team</author>
@@ -13,6 +13,9 @@
     <allow-navigation href="http://10.67.1.49:8100" />
     <allow-navigation href="http://10.67.1.52:8100" />
     <allow-navigation href="http://192.168.43.20:8100" />
+    <allow-navigation href="http://*.mzstatic.com/*" />
+    <allow-navigation href="http://*.spotify.com/api/token/*" />
+    <allow-navigation href="https://*.spotify.com/api/token/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />

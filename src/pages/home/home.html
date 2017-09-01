@@ -24,19 +24,21 @@
 		<ion-item-divider id="played" color="dark">
 			Previously Played
 		</ion-item-divider>
-		<ion-item>
-			<ion-row *ngFor="let result of results"  type="item-text-wrap">
-					<ion-col col-12 id="trackname" text-wrap><b>{{result.song.trackName}}</b></ion-col>
-					<ion-col col-8 text-wrap>{{result.song.artistName}}</ion-col>
-					<ion-col col-4 text-right>{{convert12hr(result.song._start)}}</ion-col>
-			</ion-row>
-            <ion-row>
-                <ion-col col-12>    
-                    <a href="http://www.wyep.org/on-air">
-                        <div text-center>view more on website</div>
-                    </a>
-                </ion-col>    
-            </ion-row>
+		<ion-item *ngFor="let result of results" (click)="songDetailOverlay(result)">
+			<ion-thumbnail item-start>
+				<img [src]="result.song.thumb"> 
+			</ion-thumbnail>
+			<h2>{{result.song.trackName}}</h2>
+			<p>{{result.song.artistName}}</p>
+
+			<p clear item-end>{{convert12hr(result.song._start_time)}}</p>
 		</ion-item>
+		<ion-row>
+				<ion-col col-12>    
+						<a href="http://www.wyep.org/on-air">
+								<div text-center>view more on website</div>
+						</a>
+				</ion-col>    
+		</ion-row>
 	</ion-list>
 </ion-content>

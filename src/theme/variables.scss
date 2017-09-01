@@ -89,7 +89,7 @@ $colors: (
 	font-size: 30px;
 	padding: 7px;
 	float: left;
-	display:none;
+  display: none;
 }
 #auto-play{
 	color:#fff;
@@ -114,6 +114,29 @@ $colors: (
 }
 #by {
 	margin-bottom: -2px;
+}
+.alert-button-group {
+		height: 56px;
+		justify-content: space-evenly !important;
+}
+.alertiTunes, .alertSpotify {
+
+}
+.alertiTunes .button-inner, .alertSpotify .button-inner {
+		display: none;
+}
+.alertSpotify {
+	  background-image: url(../assets/img/logo@2x.png);
+    background-size: cover;
+		margin-left: 0px !important;	
+		width: 45%;
+}
+.alertiTunes {
+	  background-image: url(../assets/img/link-badge-itunes_2x.png);
+    background-size: cover;
+		width: 22%;
+    height: 20%;
+    margin: 0 8px 8px 0!important;
 }
 #trackname {
 	margin-bottom:-6px;
