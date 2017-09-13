@@ -78,6 +78,9 @@ $colors: (
 .toolbar {
 	
 }
+ion-icon {
+        font-size: 90px; //Preferred size here
+}
 #wyeplogo {
     margin: 2px;
 }
@@ -102,7 +105,7 @@ $colors: (
 #nowplaying {
 		background-color: rgba(244, 244, 244, 0.90);
 		width: 100px;
-    min-width: 70%;
+    min-width: 100%;
 		-webkit-border-radius: 20px;
 		border-radius: 20px;
 		margin: 70px auto 0px;

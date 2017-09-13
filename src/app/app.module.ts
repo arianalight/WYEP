@@ -6,8 +6,10 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { HttpModule  } from '@angular/http';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { Media, MediaObject } from '@ionic-native/media';
 import { AngularFireModule } from 'angularfire2';
 import { HeaderColor } from '@ionic-native/header-color';
+import { AppAvailability } from '@ionic-native/app-availability';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -51,7 +53,9 @@ import { IonicStorageModule } from '@ionic/storage';
 		InAppBrowser,
 		HttpModule,
 		BackgroundMode,
-		HeaderColor
+		Media,
+		HeaderColor,
+		AppAvailability
   ]
 })
  

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.wyep.android" version="1.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="org.wyep.android" version="1.0.10" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>WYEP</name>
     <description>Play the WYEP live stream in high quality, see the playlist, and more!</description>
     <author email="antonio@wyep.org" href="http://wyep.org">WYEP Digital Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://10.67.1.73:8100" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
     <allow-navigation href="http://192.168.200.123:8100" />
@@ -92,7 +92,10 @@
     <allow-navigation href="http://10.87.10.6:8100" />
     <allow-navigation href="http://192.168.0.59:8100" />
     <allow-navigation href="http://10.67.1.44:8100" />
+    <allow-navigation href="http://10.67.1.73:8100" />
+    <allow-navigation href="http://10.66.10.6:8100" />
     <engine name="android" spec="^6.2.3" />
+    <plugin name="cordova-plugin-appavailability" spec="^0.4.2" />
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
     <plugin name="cordova-plugin-console" spec="^1.0.5" />
     <plugin name="cordova-plugin-device" spec="^1.1.4" />

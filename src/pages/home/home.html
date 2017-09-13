@@ -41,4 +41,13 @@
 				</ion-col>    
 		</ion-row>
 	</ion-list>
+<ion-fab left bottom>
+    <button ion-fab color="light"><ion-icon name="arrow-dropup"></ion-icon></button>
+    <ion-fab-list side="top">
+      <button ion-fab style="zoom:1.8;" (tap)="openFacebook()"><ion-icon name="logo-facebook" ></ion-icon></button>
+      <button ion-fab style="zoom:1.8;" (tap)="openTwitter()"><ion-icon name="logo-twitter"></ion-icon></button>
+      <button ion-fab style="zoom:1.8;" (tap)="openInstagram()"><ion-icon name="logo-instagram"></ion-icon></button>
+			<button ion-fab style="zoom:1.8;" (tap)="openYoutube()"><ion-icon name="logo-youtube"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>
