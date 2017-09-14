@@ -85,7 +85,7 @@ export class HomePage {
 		this.checkLater(500, "init");
 		this.lastFiveSongs();		
 	}
-	setSocialSchemes(platform){
+		setSocialSchemes(platform){
 		if(platform == "android"){
 			//set android socialSchema
 			this.fbScheme = "com.facebook.katana";
@@ -98,22 +98,22 @@ export class HomePage {
 			this.twitterScheme = "twitter://";
 			this.instagramScheme = "instagram://";
 		}		
-			// this.youtubeScheme = "com.youtube.android";
-			if(this.appAvailability.check(this.fbScheme)){
-				this.fbLink = 'fb://page/WYEP91.3fm';			
-			} else {
-				this.fbLink = 'https://facebook.com/WYEP91.3fm';
-			}
-			if(this.appAvailability.check(this.twitterScheme)){
-				this.twitterLink = 'twitter://user?screen_name=WYEP';			
-			} else {
-				this.twitterLink = 'https://twitter.com/WYEP';
-			}
-			if(this.appAvailability.check(this.instagramScheme)){
-				this.instagramLink = 'instagram://user?username=wyeppgh';			
-			} else {
-				this.instagramLink = 'https://www.instagram.com/wyeppgh/';
-			}
+		this.appAvailability.check(this.fbScheme).then((res) => {
+					 this.fbLink = 'fb://page/55254374259';	
+		}, (err) => {
+			this.fbLink = 'https://facebook.com/WYEP91.3fm';
+		});
+		this.appAvailability.check(this.twitterScheme).then((res) => {
+			this.twitterLink = 'twitter://user?screen_name=WYEP';	
+		}, (err) => {
+			this.twitterLink = 'https://twitter.com/WYEP';
+		});
+		this.appAvailability.check(this.instagramScheme).then((res) => {
+			this.instagramLink = 'instagram://user?username=wyeppgh';	
+		}, (err) => {
+			this.instagramLink = 'https://www.instagram.com/wyeppgh/';
+		});
+
 		//youTube opens automatically based on user settings	
 		this.youtubeLink = 'vnd.youtube://user/WyepOrg';		
 	}
